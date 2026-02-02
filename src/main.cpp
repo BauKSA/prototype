@@ -1,26 +1,29 @@
 ﻿#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <vector>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Window.hpp>
+#include <SFML/Window/WindowBase.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Clock.hpp>
 
-#include "actors/player/Player.h"
-#include "actors/bullet/Bullet.h"
+#include<actors/player/Player.h>
+#include<actors/bullet/Bullet.h>
 #include<actors/star/Star.h>
 #include<actors/camera/Camera.h>
 
-#include "game/system/Draw.h"
-#include "game/system/JoystickInput.h"
-#include "game/system/PlayerInput.h"
-#include "game/system/Movement.h"
-#include "game/system/ConstantForwardMovement.h"
-#include<game/system/AnimFrames.h>
+#include<game/system/Draw.h>
+#include<game/system/JoystickInput.h>
+#include<game/system/PlayerInput.h>
+#include<game/system/Movement.h>
+#include<game/system/ConstantForwardMovement.h>
+#include<game/system/CollisionSystem.h>
 
 #include "game/component/Position.h"
 #include "game/component/State.h"
 #include <iostream>
 
 int main() {
-    
     InitCamera();
 
     InitPlayer();
@@ -68,9 +71,9 @@ int main() {
         }
 
         window->clear(sf::Color::Black);
-		UpdateFrames(delta_time);
         ConstantForwardMovement();
         MoveActors(delta_time);
+        CheckCollisions();
         UpdateCamera();
         DrawActors(*window);
         window->display();

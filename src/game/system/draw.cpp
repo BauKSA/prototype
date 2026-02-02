@@ -12,23 +12,19 @@
 #include<game/component/State.h>
 #include<game/component/Layer.h>
 #include<game/component/Shape.h>
-#include<game/component/Animation.h>
 #include <iostream>
+#include <ostream>
+#include <string>
 
 void DrawActors(sf::RenderWindow& window) {
-    std::cout << "drawing " << layers.size() << " entities" << std::endl;
-
     for (size_t i = 0; i < layers.size(); i++) {
-        std::cout << "processing layer index: " << i << std::endl;
         Entity e = layers.at(i).entity;
-        std::cout << "layer: " << i << ", entity: " << e << std::endl;
 
         if (!states[e].active) {
-            std::cout << "skipping inactive entity : " << e << std::endl;
             continue;
         }
 
-        const Body& body = *bodies.at(e);
+        Body& body = *bodies.at(e);
         int xPos = 0;
         int yPos = 0;
         float rotation_angle = 0.f;
@@ -42,43 +38,35 @@ void DrawActors(sf::RenderWindow& window) {
             rotation_angle = transforms[e].rotation;
         }
 
-        bool has_animation_to_update = false;
-
-        if (e < animations_to_update.size()) {
-            has_animation_to_update = animations_to_update[e];
-			animations_to_update[e] = false;
-        }
-
-		if (e < shapes.size() && !shapes[e].empty() && !has_animation_to_update) {
-
-			std::cout << "entity " << e << " has existing shapes [" << shapes[e].size() << "]" << std::endl;
+		if (body.shape_generated) {
             for (size_t j = 0; j < shapes[e].size(); j++) {
-				sf::ConvexShape& shape = shapes[e][j];
+				sf::ConvexShape& shape = shapes[e][j].shape;
 
                 shape.setPosition(xPos, yPos);
                 shape.setRotation(rotation_angle);
 
-                std::cout << "drawing existing shape entity : " << e << std::endl;
                 window.draw(shape);
-                std::cout << "drawn existing shape : " << e << std::endl;
             }
 
             continue;
         }
 
+		body.shape_generated = true;
+        std::string tag = "";
+        if (e < states.size()) {
+            tag = states[e].tag;
+        }
+
         for (const Vertex& component : body.components) {
+            std::cout << "Drawing shape for entity " << e << std::endl;
             if (component.coords.empty()) {
-				std::cout << "skipping empty shape entity : " << e << std::endl;
                 continue;
             }
 
-            if (e > shapes.size()) {
-				std::cout << "resizing shapes for entity : " << e << std::endl;
+            if (e >= shapes.size()) {
                 shapes.resize(GetCurrentEntity());
             }
 
-
-			std::cout << "creating new shape for entity : " << e << std::endl;
             sf::ConvexShape shape;
 
             shape.setPointCount(component.coords.size());
@@ -103,25 +91,21 @@ void DrawActors(sf::RenderWindow& window) {
             float center_x = (min_x + max_x) / 2.f;
             float center_y = (min_y + max_y) / 2.f;
 
-            // Rotación alrededor del centro del componente
             shape.setOrigin(center_x, center_y);
-
-            // Posición final de la entidad + centro
             shape.setPosition(xPos + center_x, yPos + center_y);
-
             shape.setRotation(rotation_angle);
 
             shape.setFillColor(HexToSf(component.color));
             shape.setOutlineColor(HexToSf(component.outline));
             shape.setOutlineThickness(1.f);
 
+			ShapeComponent shapeComp;
+			shapeComp.shape = shape;
+			shapeComp.tag = tag + "_" + component.tag;
 
-			std::cout << "storing new shape for entity : " << e << std::endl;
-			shapes[e].push_back(shape);
+            shapes[e].push_back(shapeComp);
 
-            std::cout << "drawing new shape entity : " << e << std::endl;
             window.draw(shape);
-            std::cout << "drawn new shape : " << e << std::endl;
         }
     }
 }

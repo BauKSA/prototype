@@ -1,13 +1,11 @@
 #include<vector>
-#include<array>
 
-#include "game/component/Position.h"
-#include "game/component/Body.h"
-#include "game/component/Transform.h"
-#include "game/component/Velocity.h"
-#include "game/component/Speed.h"
-#include "game/component/State.h"
-#include<game/component/Animation.h>
+#include<game/component/Position.h>
+#include<game/component/Body.h>
+#include<game/component/Transform.h>
+#include<game/component/Velocity.h>
+#include<game/component/Speed.h>
+#include<game/component/State.h>
 #include<game/component/Shape.h>
 
 std::vector<Position> positions;
@@ -16,6 +14,5 @@ std::vector<Transform> transforms;
 std::vector<Velocity> velocities;
 std::vector<Speed> speeds;
 std::vector<State> states;
-std::vector<std::array<Animation, MAX_ANIMATIONS>> animations;
 std::vector<bool> animations_to_update;
 std::vector<Shape> shapes;
