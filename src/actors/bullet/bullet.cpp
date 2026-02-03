@@ -13,6 +13,7 @@
 #include "actors/player/Player.h"
 #include<game/component/State.h>
 #include<game/component/Layer.h>
+#include<game/component/Shape.h>
 #include <string>
 
 
@@ -32,7 +33,9 @@ static void InitBulletBody(Entity bullet) {
     bulletVertex.outline = SfToHex(sf::Color::Yellow);
 
     bulletBody->components.push_back(bulletVertex);
+    bulletBody->shape_generated = false;
 
+	bodies.resize(GetCurrentEntity());
     bodies[bullet] = bulletBody;
 }
 

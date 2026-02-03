@@ -9,7 +9,7 @@
 
 static void Compare(ShapeComponent a, ShapeComponent b, Entity entity_a, Entity entity_b) {
 	if (AABB_Intersect(a.shape, b.shape)) {
-		std::cout << "Collision detected between Entity " << entity_a << " and Entity " << entity_b << std::endl;
+		std::cout << "Collision detected between main Entity " << entity_a << " and secondary Entity " << entity_b << std::endl;
 	}
 }
 
@@ -23,7 +23,7 @@ void CheckCollisions() {
 			for (size_t j = 0; j < bodies.size(); j++) {
 				Entity entity_b = j;
 				if (entity_a == entity_b) continue;
-
+				if (j >= shapes.size()) continue;
 				for (const ShapeComponent& other : shapes[j]) {
 					Compare(shape, other, entity_a, entity_b);
 				}

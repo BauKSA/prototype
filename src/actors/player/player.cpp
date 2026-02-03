@@ -11,6 +11,7 @@
 #include "actors/player/Player.h"
 #include<game/component/State.h>
 #include<game/component/Layer.h>
+#include<game/component/Shape.h>
 
 Entity Player = CreateEntity();
 
@@ -35,6 +36,9 @@ static void InitPlayerBody() {
     // Contenedor global de bodies (ECS estilo simple)
     bodies.resize(GetCurrentEntity());
     bodies[Player] = shipBody;
+
+    shapes.resize(GetCurrentEntity());
+    shapes[Player] = {};
 }
 
 static void InitPlayerPosition() {
