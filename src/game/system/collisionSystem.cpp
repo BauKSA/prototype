@@ -29,6 +29,7 @@ void CheckCollisions() {
 
 	for (size_t i = 0; i < bodies.size(); i++) {
 		Entity entity_a = i;
+		if (bodies[i] == nullptr) continue;
 		const Body& body = *bodies[i];
 		if (!body.shape_generated) continue;
 		if (!states[i].active) continue;
@@ -36,6 +37,8 @@ void CheckCollisions() {
 		for (const ShapeComponent& shape : shapes[i]) {
 			for (size_t j = i + 1; j < bodies.size(); j++) {
 				Entity entity_b = j;
+				if (bodies[j] == nullptr) continue;
+
 				const Body& body_b = *bodies[j];
 
 				if (!body_b.shape_generated) continue;

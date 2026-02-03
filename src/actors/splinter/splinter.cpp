@@ -2,7 +2,6 @@
 #include<vector>
 #include<SFML/Graphics/Color.hpp>
 #include<iostream>
-#include<random>
 
 #include<game/Entity.h>
 #include<game/component/Body.h>
@@ -13,7 +12,8 @@
 #include<game/utils/ColorConversor.h>
 #include<game/component/State.h>
 #include<game/component/Layer.h>
-#include <string>
+#include<game/utils/Random.h>
+#include<string>
 
 std::vector<Entity> splinters;
 std::string SPLINTER_TAG = "SPLINTER";
@@ -37,6 +37,7 @@ static void InitSplinterBody(Entity splinter) {
     splinterVertex.outline = SfToHex(sf::Color::Red);
 
     splinterBody->components.push_back(splinterVertex);
+	splinterBody->shape_generated = false;
 
     bodies[splinter] = splinterBody;
 }
@@ -49,19 +50,10 @@ static void InitSplinterPosition(Entity splinter, float x, float y) {
     positions[splinter] = splinterPosition;
 }
 
-
-static int random() {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    static std::uniform_int_distribution<int> dist(0, 360);
-
-    return dist(gen);
-}
-
 static void InitSplinterTransform(Entity splinter) {
     Transform splinterTransform{};
 
-    splinterTransform.rotation = random();
+    splinterTransform.rotation = random(0, 360);
 
     transforms[splinter] = splinterTransform;
 }
