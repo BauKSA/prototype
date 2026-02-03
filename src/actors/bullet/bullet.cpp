@@ -31,6 +31,7 @@ static void InitBulletBody(Entity bullet) {
 
     bulletVertex.color = SfToHex(sf::Color::Black);
     bulletVertex.outline = SfToHex(sf::Color::Yellow);
+    bulletVertex.tag = "main";
 
     bulletBody->components.push_back(bulletVertex);
     bulletBody->shape_generated = false;

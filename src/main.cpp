@@ -1,11 +1,13 @@
-﻿#include <SFML/Graphics/Color.hpp>
-#include <vector>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/Window/Window.hpp>
-#include <SFML/Window/WindowBase.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/System/Clock.hpp>
+﻿#include <vector>
+#include <iostream>
+
+#include<SFML/Graphics/Color.hpp>
+#include<SFML/Graphics/RenderTarget.hpp>
+#include<SFML/System/Time.hpp>
+#include<SFML/Window/Window.hpp>
+#include<SFML/Window/WindowBase.hpp>
+#include<SFML/Window/Event.hpp>
+#include<SFML/System/Clock.hpp>
 
 #include<actors/player/Player.h>
 #include<actors/bullet/Bullet.h>
@@ -19,9 +21,11 @@
 #include<game/system/ConstantForwardMovement.h>
 #include<game/system/CollisionSystem.h>
 
-#include "game/component/Position.h"
-#include "game/component/State.h"
-#include <iostream>
+#include<game/component/Position.h>
+#include<game/component/State.h>
+
+#include<game/event/Event.h>
+#include<game/utils/EventContainer.h>
 
 int main() {
     InitCamera();
@@ -33,10 +37,12 @@ int main() {
     sf::Clock fpsClock;
     int frames = 0;
     float currentFPS = 0.f;
-    
+
     sf::Clock debugClock;
 
     InitStar();
+
+    InitCollisionEvents();
 
     while (window->isOpen())
     {
@@ -71,11 +77,14 @@ int main() {
         }
 
         window->clear(sf::Color::Black);
+
         ConstantForwardMovement();
         MoveActors(delta_time);
         CheckCollisions();
+        DispatchEvents();
         UpdateCamera();
         DrawActors(*window);
+
         window->display();
 
         // ===== Contar FPS =====

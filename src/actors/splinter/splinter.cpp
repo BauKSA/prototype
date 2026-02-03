@@ -11,11 +11,9 @@
 #include<game/component/Speed.h>
 #include<game/component/Velocity.h>
 #include<game/utils/ColorConversor.h>
-#include<actors/player/Player.h>
 #include<game/component/State.h>
 #include<game/component/Layer.h>
 #include <string>
-
 
 std::vector<Entity> splinters;
 std::string SPLINTER_TAG = "SPLINTER";

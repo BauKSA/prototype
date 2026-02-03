@@ -36,9 +36,6 @@ static void InitPlayerBody() {
     // Contenedor global de bodies (ECS estilo simple)
     bodies.resize(GetCurrentEntity());
     bodies[Player] = shipBody;
-
-    shapes.resize(GetCurrentEntity());
-    shapes[Player] = {};
 }
 
 static void InitPlayerPosition() {

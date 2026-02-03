@@ -9,6 +9,7 @@
 #include<game/component/State.h>
 #include<game/Entity.h>
 #include<actors/bullet/Bullet.h>
+#include<actors/splinter/Splinter.h>
 
 const double PI = 3.14159265358979323846;
 
@@ -31,5 +32,10 @@ void ConstantForwardMovement() {
 	for (size_t i = 0; i < Bullets.size(); i++) {
 		if (!states[Bullets.at(i)].active) continue;
 		ConstantMove(Bullets.at(i));
+	}
+
+	for (size_t i = 0; i < splinters.size(); i++) {
+		if (!states[splinters.at(i)].active) continue;
+		ConstantMove(splinters.at(i));
 	}
 }

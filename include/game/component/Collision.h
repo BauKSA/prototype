@@ -2,6 +2,7 @@
 #define _COLLISION_
 #include<vector>
 #include<game/Entity.h>
+#include<string>
 
 struct CollisionEvent {
 	std::string tag_a;
