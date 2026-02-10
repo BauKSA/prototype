@@ -10,7 +10,7 @@
 #include<SFML/System/Clock.hpp>
 
 #include<actors/player/Player.h>
-#include<actors/bullet/Bullet.h>
+#include<actors/circuits/example/ExampleCircuit.h>
 #include<actors/star/Star.h>
 #include<actors/camera/Camera.h>
 
@@ -20,9 +20,7 @@
 #include<game/system/Movement.h>
 #include<game/system/ConstantForwardMovement.h>
 #include<game/system/CollisionSystem.h>
-
-#include<game/component/Position.h>
-#include<game/component/State.h>
+#include<game/system/TimerSystem.h>
 
 #include<game/event/Event.h>
 #include<game/utils/EventContainer.h>
@@ -43,6 +41,7 @@ int main() {
     InitStar();
 
     InitCollisionEvents();
+    InitExampleCircuit();
 
     while (window->isOpen())
     {
@@ -63,22 +62,10 @@ int main() {
             }
         }
 
-        for (size_t i = 0; i < Bullets.size(); i++) {
-            float x = positions[Bullets.at(i)].x;
-            float y = positions[Bullets.at(i)].y;
-
-            bool is_active = states[Bullets.at(i)].active;
-
-            if ((x < 0 || x > 800 || y < 0 || y > 600) && is_active) {
-                std::cout << "Deactivate bullet with ID: " << Bullets.at(i)
-                    <<" at position: " << x << ", " << y << std::endl;
-				DeactivateBullet(Bullets.at(i));
-            }
-        }
-
         window->clear(sf::Color::Black);
 
         ConstantForwardMovement();
+        TimerSystem(delta_time);
         MoveActors(delta_time);
         CheckCollisions();
         DispatchEvents();

@@ -11,21 +11,49 @@
 
 static void Compare(ShapeComponent a, ShapeComponent b, Entity entity_a, Entity entity_b) {
 	if (AABB_Intersect(a.shape, b.shape)) {
-		std::cout << "Collision detected between main Entity " << entity_a << " and secondary Entity " << entity_b << std::endl;
-		CollisionEvent event;
-		event.entity_a = entity_a;
-		event.entity_b = entity_b;
-		event.tag_a = a.tag;
-		event.tag_b = b.tag;
+		EntityPair pair{ a.tag, b.tag, entity_a, entity_b };
+		currentCollisions.insert(pair);
 
-		collisionEvents.push_back(event);
-		collissionEventCount++;
+		if (previousCollisions.find(pair) == previousCollisions.end()) {
+			CollisionEvent event;
+			event.entity_a = entity_a;
+			event.entity_b = entity_b;
+			event.tag_a = a.tag;
+			event.tag_b = b.tag;
+
+			collisionEvents.push_back(event);
+			collissionEventCount++;
+			std::cout << "Collision detected between " << entity_a << " and " << entity_b << std::endl;
+		}
 	}
+}
+
+static void HandleExitCollision() {
+	for (const auto& pair : previousCollisions) {
+		if (currentCollisions.find(pair) == currentCollisions.end()) {
+			std::cout << "Exit collision between " << pair.tag_a << " and " << pair.tag_b << std::endl;
+
+			CollisionEvent exitEvent;
+			exitEvent.entity_a = pair.entity_a;
+			exitEvent.entity_b = pair.entity_b;
+			exitEvent.tag_a = pair.tag_a;
+			exitEvent.tag_b = pair.tag_b;
+
+			exitEvents.push_back(exitEvent);
+			exitEventCount++;
+		}
+	}
+
+	previousCollisions = currentCollisions;
+	currentCollisions.clear();
 }
 
 void CheckCollisions() {
 	collisionEvents.clear();
 	collissionEventCount = 0;
+
+	exitEvents.clear();
+	exitEventCount = 0;
 
 	for (size_t i = 0; i < bodies.size(); i++) {
 		Entity entity_a = i;
@@ -51,4 +79,6 @@ void CheckCollisions() {
 			}
 		}
 	}
+
+	HandleExitCollision();
 }

@@ -25,6 +25,7 @@ void PlayerBullet_EnemyCollision(
 	int count = random(4, 10);
 
 	std::cout << "PlayerBullet_EnemyCollision triggered between " << tag_a << " and " << tag_b << std::endl;
+	std::cout << "random count for explosion: " << count << std::endl;
 	InitExplosion(x, y, count);
 
 	return;

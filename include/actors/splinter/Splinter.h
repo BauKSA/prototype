@@ -7,7 +7,7 @@
 extern std::vector<Entity> splinters;
 extern std::string SPLINTER_TAG;
 
-void InitSplinter(float x, float y);
+void InitSplinter(float x, float y, float angle);
 void DeactivateSplinter(Entity splinter);
 
 #endif //_BULLET_

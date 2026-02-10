@@ -1,8 +1,9 @@
-#include<game/utils/EventContainer.h>
 #include<game/event/Event.h>
 
 #include<game/collision/PlayerBullet_EnemyCollision.h>
+#include<game/collision/PlayerOutCircuit.h>
 
 void InitCollisionEvents() {
-	events.push_back(PlayerBullet_EnemyCollision);
+	EnterCollisionEvents.push_back(PlayerBullet_EnemyCollision);
+	ExitCollisionEvents.push_back(PlayerOutCircuit);
 }

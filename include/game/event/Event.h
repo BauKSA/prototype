@@ -11,7 +11,8 @@ typedef void (*Event)(
 	Entity entity_b
 	);
 
-extern std::vector<Event> events;
+extern std::vector<Event> EnterCollisionEvents;
+extern std::vector<Event> ExitCollisionEvents;
 
 void DispatchEvents();
 

@@ -10,9 +10,10 @@
 #include<game/component/Speed.h>
 #include<game/component/Velocity.h>
 #include<game/utils/ColorConversor.h>
+#include<game/utils/Random.h>
 #include<game/component/State.h>
 #include<game/component/Layer.h>
-#include<game/utils/Random.h>
+#include<game/component/Timer.h>
 #include<string>
 
 std::vector<Entity> splinters;
@@ -50,16 +51,16 @@ static void InitSplinterPosition(Entity splinter, float x, float y) {
     positions[splinter] = splinterPosition;
 }
 
-static void InitSplinterTransform(Entity splinter) {
+static void InitSplinterTransform(Entity splinter, float angle) {
     Transform splinterTransform{};
 
-    splinterTransform.rotation = random(0, 360);
+    splinterTransform.rotation = angle;
 
     transforms[splinter] = splinterTransform;
 }
 
 static void InitSplinterMovement(Entity splinter) {
-    speeds[splinter] = .5f;
+    speeds[splinter] = .75f;
 
     velocities[splinter] = { 0.f, 0.f };
 }
@@ -72,7 +73,20 @@ static void InitState(Entity splinter) {
     states[splinter] = state;
 }
 
-void InitSplinter(float x, float y) {
+static void InitSplinterTimer(Entity splinter) {
+    int t = random(50, 200);
+
+    Timer timer{};
+    timer.timer = 0.f;
+    timer.cb_time = t;
+    timer.callback = DeactivateSplinter;
+
+    timers.resize(GetCurrentEntity());
+    timers[splinter] = timer;
+    timedEntities.push_back(splinter);
+}
+
+void InitSplinter(float x, float y, float angle) {
     Entity splinter;
     bool activated_splinter = false;
 
@@ -88,16 +102,17 @@ void InitSplinter(float x, float y) {
     if (!activated_splinter) {
         splinter = CreateEntity();
         InitSplinterBody(splinter);
+        InitSplinterTimer(splinter);
 
         splinters.push_back(splinter);
     }
 
     std::cout << "Init splinter with ID: " << splinter << std::endl;
 
-    InitSplinterPosition(splinter, x, y);
-    InitSplinterTransform(splinter);
-    InitSplinterMovement(splinter);
     InitState(splinter);
+    InitSplinterPosition(splinter, x, y);
+    InitSplinterTransform(splinter, angle);
+    InitSplinterMovement(splinter);
     AddActorToLayer(splinter, 0);
 }
 

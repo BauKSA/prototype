@@ -11,7 +11,6 @@
 #include "actors/player/Player.h"
 #include<game/component/State.h>
 #include<game/component/Layer.h>
-#include<game/component/Shape.h>
 
 Entity Player = CreateEntity();
 
@@ -27,7 +26,7 @@ static void InitPlayerBody() {
 
     shipVertex.color = SfToHex(sf::Color::Black);
     shipVertex.outline = SfToHex(sf::Color::White);
-
+	shipVertex.tag = "main";
 
     // Agregamos el vertex al body
     shipBody->components.push_back(shipVertex);
