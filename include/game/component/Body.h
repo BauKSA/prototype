@@ -15,6 +15,7 @@ typedef struct {
 	int32_t color;
 	int32_t outline;
 	std::string tag;
+	Coord offset;
 } Vertex;
 
 struct Body {

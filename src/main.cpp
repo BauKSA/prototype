@@ -13,6 +13,7 @@
 #include<actors/circuits/example/ExampleCircuit.h>
 #include<actors/star/Star.h>
 #include<actors/camera/Camera.h>
+#include<actors/tank/Tank.h>
 
 #include<game/system/Draw.h>
 #include<game/system/JoystickInput.h>
@@ -39,6 +40,7 @@ int main() {
     sf::Clock debugClock;
 
     InitStar();
+    InitTank();
 
     InitCollisionEvents();
     InitExampleCircuit();

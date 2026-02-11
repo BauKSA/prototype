@@ -4,8 +4,11 @@
 #include<vector>
 #include<string>
 
+#include<game/component/Body.h>
+
 struct ShapeComponent {
 	sf::ConvexShape shape;
+	Coord offset;
 	std::string tag;
 };
 

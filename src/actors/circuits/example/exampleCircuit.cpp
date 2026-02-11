@@ -21,9 +21,12 @@ static void InitCircuitBody(Entity circuit) {
 	circuitVertex.coords.push_back({ 8000, 250 });
 	circuitVertex.coords.push_back({ 8000, -250 });
 
-	circuitVertex.color = SfToHex(sf::Color::Black);
+	circuitVertex.color = SfToHex(sf::Color::Transparent);
 	circuitVertex.outline = SfToHex(sf::Color::Magenta);
 	circuitVertex.tag = "main";
+
+	Coord offset{ 0, 0 };
+	circuitVertex.offset = offset;
 
 	circuitBody->components.push_back(circuitVertex);
 	circuitBody->shape_generated = false;
@@ -66,5 +69,5 @@ void InitExampleCircuit() {
 	InitCircuitPosition(circuit);
 	InitCircuitTransform(circuit);
 	InitState(circuit);
-	AddActorToLayer(circuit, 0);
+	AddActorToLayer(circuit, -1);
 }

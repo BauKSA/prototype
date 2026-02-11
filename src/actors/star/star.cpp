@@ -45,10 +45,12 @@ static void InitStarBody(Entity star) {
     starVertex.outline = SfToHex(sf::Color::Cyan);
     starVertex.tag = "main";
 
+    Coord offset{ 0, 0 };
+	starVertex.offset = offset;
+
     // Agregamos el vertex al body
     starBody->components.push_back(starVertex);
 	starBody->shape_generated = false;
-
 
     // Contenedor global de bodies (ECS estilo simple)
     bodies.resize(GetCurrentEntity());

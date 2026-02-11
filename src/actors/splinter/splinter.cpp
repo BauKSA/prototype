@@ -37,6 +37,9 @@ static void InitSplinterBody(Entity splinter) {
     splinterVertex.color = SfToHex(sf::Color::Yellow);
     splinterVertex.outline = SfToHex(sf::Color::Red);
 
+    Coord offset{ 0, 0 };
+	splinterVertex.offset = offset;
+
     splinterBody->components.push_back(splinterVertex);
 	splinterBody->shape_generated = false;
 

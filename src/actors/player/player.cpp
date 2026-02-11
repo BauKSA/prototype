@@ -28,6 +28,9 @@ static void InitPlayerBody() {
     shipVertex.outline = SfToHex(sf::Color::White);
 	shipVertex.tag = "main";
 
+    Coord offset{ 0, 0 };
+	shipVertex.offset = offset;
+
     // Agregamos el vertex al body
     shipBody->components.push_back(shipVertex);
     shipBody->shape_generated = false;

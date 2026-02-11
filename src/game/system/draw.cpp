@@ -41,8 +41,9 @@ void DrawActors(sf::RenderWindow& window) {
 		if (body.shape_generated) {
             for (size_t j = 0; j < shapes[e].size(); j++) {
 				sf::ConvexShape& shape = shapes[e][j].shape;
+                Coord offset = shapes[e][j].offset;
 
-                shape.setPosition(xPos, yPos);
+                shape.setPosition(xPos + offset.x, yPos + offset.y);
                 shape.setRotation(rotation_angle);
 
                 window.draw(shape);
@@ -92,7 +93,7 @@ void DrawActors(sf::RenderWindow& window) {
             float center_y = (min_y + max_y) / 2.f;
 
             shape.setOrigin(center_x, center_y);
-            shape.setPosition(xPos + center_x, yPos + center_y);
+            shape.setPosition(xPos + center_x + component.offset.x, yPos + center_y + component.offset.y);
             shape.setRotation(rotation_angle);
 
             shape.setFillColor(HexToSf(component.color));
@@ -102,6 +103,7 @@ void DrawActors(sf::RenderWindow& window) {
 			ShapeComponent shapeComp;
 			shapeComp.shape = shape;
 			shapeComp.tag = tag + "_" + component.tag;
+            shapeComp.offset = component.offset;
 
             shapes[e].push_back(shapeComp);
 
