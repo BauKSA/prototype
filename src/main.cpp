@@ -10,7 +10,6 @@
 #include<SFML/System/Clock.hpp>
 
 #include<actors/player/Player.h>
-#include<actors/circuits/example/ExampleCircuit.h>
 #include<actors/star/Star.h>
 #include<actors/camera/Camera.h>
 #include<actors/tank/Tank.h>
@@ -22,6 +21,7 @@
 #include<game/system/ConstantForwardMovement.h>
 #include<game/system/CollisionSystem.h>
 #include<game/system/TimerSystem.h>
+#include<game/system/TickSystem.h>
 
 #include<game/event/Event.h>
 #include<game/utils/EventContainer.h>
@@ -43,7 +43,6 @@ int main() {
     InitTank();
 
     InitCollisionEvents();
-    InitExampleCircuit();
 
     while (window->isOpen())
     {
@@ -67,6 +66,7 @@ int main() {
         window->clear(sf::Color::Black);
 
         ConstantForwardMovement();
+        TickSystem(delta_time);
         TimerSystem(delta_time);
         MoveActors(delta_time);
         CheckCollisions();

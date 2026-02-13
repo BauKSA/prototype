@@ -46,7 +46,7 @@ static void InitBulletBody(Entity bullet) {
 static void InitBulletPosition(Entity bullet) {
 	Position bulletPosition{};
 	bulletPosition.x = positions[Player].x;
-	bulletPosition.y = positions[Player].y;
+	bulletPosition.y = positions[Player].y - 1;
 
 	positions[bullet] = bulletPosition;
 }
@@ -59,7 +59,7 @@ static void InitBulletTransform(Entity bullet) {
 }
 
 static void InitBulletMovement(Entity bullet) {
-	speeds[bullet] = .75f;
+	speeds[bullet] = 2.f;
 
 	velocities[bullet] = { 0.f, 0.f };
 }

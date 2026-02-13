@@ -1,3 +1,0 @@
-#ifndef CIRCUIT_TAG
-#define CIRCUIT_TAG "CIRCUIT"
-#endif // !CIRCUIT_TAG

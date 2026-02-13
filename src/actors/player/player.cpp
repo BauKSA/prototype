@@ -59,7 +59,7 @@ static void InitPlayerTransform() {
 
 static void InitPlayerMovement() {
     speeds.resize(GetCurrentEntity());
-    speeds[Player] = .35f;
+    speeds[Player] = .5f;
     
     velocities.resize(GetCurrentEntity());
     velocities[Player] = { 0.f, 0.f };

@@ -1,8 +1,9 @@
-#include <SFML/Graphics/ConvexShape.hpp>
+﻿#include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <game/component/Body.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <vector>
+#include<cmath>
 
 #include "game/Entity.h"
 #include "game/system/Draw.h"
@@ -12,8 +13,6 @@
 #include<game/component/State.h>
 #include<game/component/Layer.h>
 #include<game/component/Shape.h>
-#include <iostream>
-#include <ostream>
 #include <string>
 
 void DrawActors(sf::RenderWindow& window) {
@@ -25,84 +24,92 @@ void DrawActors(sf::RenderWindow& window) {
         }
 
         Body& body = *bodies.at(e);
-        int xPos = 0;
-        int yPos = 0;
+
+        float xPos = 0.f;
+        float yPos = 0.f;
         float rotation_angle = 0.f;
 
         if (e < positions.size()) {
-            xPos = positions[e].x;
-            yPos = positions[e].y;
+            xPos = (float)positions[e].x;
+            yPos = (float)positions[e].y;
         }
 
         if (e < transforms.size()) {
             rotation_angle = transforms[e].rotation;
         }
 
-		if (body.shape_generated) {
-            for (size_t j = 0; j < shapes[e].size(); j++) {
-				sf::ConvexShape& shape = shapes[e][j].shape;
-                Coord offset = shapes[e][j].offset;
+        // Precalcular rotación una sola vez
+        float rad = rotation_angle * 3.14159265f / 180.f;
+        float cos_r = std::cos(rad);
+        float sin_r = std::sin(rad);
 
-                shape.setPosition(xPos + offset.x, yPos + offset.y);
-                shape.setRotation(rotation_angle);
+        // ===============================
+        // Shapes ya generados
+        // ===============================
+        if (body.shape_generated) {
+            for (ShapeComponent& comp : shapes[e]) {
 
-                window.draw(shape);
+                float ox = comp.offset.x;
+                float oy = comp.offset.y;
+
+                float rx = ox * cos_r - oy * sin_r;
+                float ry = ox * sin_r + oy * cos_r;
+
+                comp.shape.setPosition(xPos + rx, yPos + ry);
+                comp.shape.setRotation(rotation_angle);
+
+                window.draw(comp.shape);
             }
 
             continue;
         }
 
-		body.shape_generated = true;
-        std::string tag = "";
-        if (e < states.size()) {
-            tag = states[e].tag;
+        // ===============================
+        // Generación inicial de shapes
+        // ===============================
+        body.shape_generated = true;
+
+        if (e >= shapes.size()) {
+            shapes.resize(GetCurrentEntity());
         }
 
+        std::string tag = (e < states.size()) ? states[e].tag : "";
+
         for (const Vertex& component : body.components) {
-            std::cout << "Drawing shape for entity " << e << std::endl;
             if (component.coords.empty()) {
                 continue;
             }
 
-            if (e >= shapes.size()) {
-                shapes.resize(GetCurrentEntity());
-            }
-
             sf::ConvexShape shape;
-
             shape.setPointCount(component.coords.size());
 
-            float min_x = component.coords[0].x;
-            float max_x = component.coords[0].x;
-            float min_y = component.coords[0].y;
-            float max_y = component.coords[0].y;
-
             for (size_t i = 0; i < component.coords.size(); ++i) {
-                float px = component.coords[i].x;
-                float py = component.coords[i].y;
-
-                shape.setPoint(i, sf::Vector2f(px, py));
-
-                if (px < min_x) min_x = px;
-                if (px > max_x) max_x = px;
-                if (py < min_y) min_y = py;
-                if (py > max_y) max_y = py;
+                shape.setPoint(i, sf::Vector2f(
+                    component.coords[i].x,
+                    component.coords[i].y
+                    ));
             }
 
-            float center_x = (min_x + max_x) / 2.f;
-            float center_y = (min_y + max_y) / 2.f;
+            // ORIGEN COMÚN DEL ACTOR
+            shape.setOrigin(0.f, 0.f);
 
-            shape.setOrigin(center_x, center_y);
-            shape.setPosition(xPos + center_x + component.offset.x, yPos + center_y + component.offset.y);
+            // Offset rotado
+            float offset_x = component.offset.x;
+            float offset_y = component.offset.y;
+
+            float rotated_x = offset_x * cos_r - offset_y * sin_r;
+            float rotated_y = offset_x * sin_r + offset_y * cos_r;
+
+            shape.setPosition(xPos + rotated_y, yPos + rotated_x);
             shape.setRotation(rotation_angle);
 
             shape.setFillColor(HexToSf(component.color));
             shape.setOutlineColor(HexToSf(component.outline));
             shape.setOutlineThickness(1.f);
 
-			ShapeComponent shapeComp;
-			shapeComp.shape = shape;
-			shapeComp.tag = tag + "_" + component.tag;
+            ShapeComponent shapeComp;
+            shapeComp.shape = shape;
+            shapeComp.tag = tag + "_" + component.tag;
             shapeComp.offset = component.offset;
 
             shapes[e].push_back(shapeComp);
@@ -111,3 +118,4 @@ void DrawActors(sf::RenderWindow& window) {
         }
     }
 }
+

@@ -59,7 +59,7 @@ static void InitStarBody(Entity star) {
 
 static void InitStarPosition(Entity star) {
     Position starPosition{};
-    starPosition.x = 400;
+    starPosition.x = 500;
     starPosition.y = 300;
 
     positions.resize(GetCurrentEntity());

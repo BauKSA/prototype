@@ -2,6 +2,7 @@
 #include<SFML/Graphics/Color.hpp>
 #include<iostream>
 #include<string>
+#include<cmath>
 
 #include "game/Entity.h"
 #include "game/component/Body.h"
@@ -15,6 +16,7 @@
 #include<game/component/State.h>
 #include<game/component/Layer.h>
 #include<game/component/Timer.h>
+#include<game/component/Tick.h>
 
 
 std::vector<Entity> tanks;
@@ -24,17 +26,17 @@ static void InitTankBody(Entity tank) {
 	Body* tankBody = new Body;
 	Vertex tankVertex;
 
-	tankVertex.coords.push_back({ 0, 0 });
-	tankVertex.coords.push_back({ 0, 26 });
-	tankVertex.coords.push_back({ 20, 26 });
-	tankVertex.coords.push_back({ 20, 0 });
+	tankVertex.coords.push_back({ 0, -15 });
+	tankVertex.coords.push_back({ 0, 15 });
+	tankVertex.coords.push_back({ 30, 15 });
+	tankVertex.coords.push_back({ 30, -15 });
 
 	Vertex cannonVertex;
 
-	cannonVertex.coords.push_back({ 0,  3 });
-	cannonVertex.coords.push_back({ 0, 6 });
-	cannonVertex.coords.push_back({ 10, 6 });
-	cannonVertex.coords.push_back({ 10,  3 });
+	cannonVertex.coords.push_back({ 0,  -5 });
+	cannonVertex.coords.push_back({ 0, 5 });
+	cannonVertex.coords.push_back({ 20, 5 });
+	cannonVertex.coords.push_back({ 20,  -5 });
 
 	cannonVertex.color = SfToHex(sf::Color::Black);
 	cannonVertex.outline = SfToHex(sf::Color::Cyan);
@@ -44,7 +46,7 @@ static void InitTankBody(Entity tank) {
 	tankVertex.outline = SfToHex(sf::Color::Blue);
 	tankVertex.tag = "main";
 
-	Coord offset{ -10, -13 };
+	Coord offset{ 25, 0 };
 	Coord empty_offset{ 0, 0 };
 
 	tankVertex.offset = empty_offset;
@@ -60,8 +62,8 @@ static void InitTankBody(Entity tank) {
 
 static void InitTankPosition(Entity tank) {
 	Position tankPosition{};
-	tankPosition.x = 0.f;
-	tankPosition.y = 450.f;
+	tankPosition.x = 400.f;
+	tankPosition.y = 300.f;
 
 	positions[tank] = tankPosition;
 }
@@ -79,6 +81,20 @@ static void InitState(Entity tank) {
 	state.tag = TANK_TAG;
 
 	states[tank] = state;
+}
+
+static void TankTick(Entity tank, float delta_time) {
+	float dx = positions[Player].x - positions[tank].x;
+	float dy = positions[Player].y - positions[tank].y;
+
+	transforms[tank].rotation = std::atan2(dy, dx) * 180.f / 3.14159265f;
+}
+
+static void InitTick(Entity tank) {
+	if (tank >= ticks.size()) ticks.resize(GetCurrentEntity());
+
+	tickedEntities.push_back(tank);
+	ticks[tank] = TankTick;
 }
 
 void InitTank() {
@@ -106,6 +122,8 @@ void InitTank() {
 	InitTankPosition(tank);
 	InitTankTransform(tank);
 	InitState(tank);
+	InitTick(tank);
+	InitTick(tank);
 	AddActorToLayer(tank, 0);
 }
 

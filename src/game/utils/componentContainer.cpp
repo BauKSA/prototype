@@ -10,6 +10,7 @@
 #include<game/component/Shape.h>
 #include<game/component/Collision.h>
 #include<game/component/Timer.h>
+#include<game/component/Tick.h>
 #include<game/event/Event.h>
 #include<game/Entity.h>
 
@@ -32,3 +33,5 @@ std::unordered_set<EntityPair, EntityPairHash> currentCollisions;
 std::vector<Event> events;
 std::vector<Timer> timers;
 std::vector<Entity> timedEntities;
+std::vector<Tick> ticks;
+std::vector<Entity> tickedEntities;
